@@ -23,6 +23,7 @@ public class PaymentTransactionController {
 
     private final GeneralService generalService;
 
+//    @PreAuthorize("hasAuthority('MAKE_PAYMENT')")
     @PostMapping("/pay")
     public Response payment(@RequestBody PaymentTransactionPayload requestDTO) {
 
@@ -30,6 +31,7 @@ public class PaymentTransactionController {
         return generalService.prepareResponse(ResponseCodeAndMessage.SUCCESSFUL_0, data);
     }
 
+    //    @PreAuthorize("hasAuthority('VIEW_PAYMENT')")
     @GetMapping("/{referenceNumber}")
     public Response getOneTransaction(@PathVariable String referenceNumber) {
 
@@ -37,6 +39,7 @@ public class PaymentTransactionController {
         return generalService.prepareResponse(ResponseCodeAndMessage.SUCCESSFUL_0, data);
     }
 
+    //    @PreAuthorize("hasAuthority('VIEW_PAYMENT')")
     @GetMapping("/get/{merchantId}")
     public Response getAllTransaction(@PathVariable String merchantId) {
 

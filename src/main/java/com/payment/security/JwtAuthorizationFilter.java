@@ -37,6 +37,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             @NotNull HttpServletRequest httpServletRequest,
             @NotNull HttpServletResponse httpServletResponse,
             @NotNull FilterChain filterChain) throws ServletException, IOException {
+
         //remove "bearer" and get jwt token
         String token = jwtService.extractToken(httpServletRequest);
 

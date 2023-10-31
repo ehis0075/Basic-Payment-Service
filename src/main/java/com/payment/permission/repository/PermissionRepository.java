@@ -18,8 +18,4 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
 
     List<Permission> findBySuperAdminTrue();
 
-    Page<Permission> findBySuperAdminTrue(Pageable pageable);
-
-    Page<Permission> findByUserATrue(Pageable pageable);
-
 }

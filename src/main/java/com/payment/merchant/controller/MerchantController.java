@@ -9,6 +9,7 @@ import com.payment.merchant.model.Merchant;
 import com.payment.merchant.service.MerchantService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -41,6 +42,7 @@ public class MerchantController {
         else return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
+//    @PreAuthorize("hasAuthority('VIEW_USER')")
     @PostMapping("/{username}")
     public Response getOne(@PathVariable String username) {
 

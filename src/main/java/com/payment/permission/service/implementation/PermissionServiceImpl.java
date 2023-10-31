@@ -4,7 +4,6 @@ package com.payment.permission.service.implementation;
 import com.payment.general.service.GeneralService;
 import com.payment.permission.dto.PermissionDTO;
 import com.payment.permission.dto.PermissionListDTO;
-import com.payment.permission.dto.PermissionRequestDTO;
 import com.payment.permission.enums.PermissionName;
 import com.payment.permission.enums.PermissionType;
 import com.payment.permission.model.Permission;
@@ -12,7 +11,6 @@ import com.payment.permission.repository.PermissionRepository;
 import com.payment.permission.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,20 +30,9 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public PermissionListDTO getAllPermission(PermissionRequestDTO requestDTO) {
-        log.info("Getting All Permission List");
-
-        Pageable paged = generalService.getPageableObject(requestDTO.getSize(), requestDTO.getPage());
-        Page<Permission> permissionPage = permissionRepository.findAll(paged);
-
-        return getPermissionListDTO(permissionPage);
-    }
-
-    @Override
     public Permission findByName(String name) {
         return permissionRepository.findByName(name);
     }
-
 
     @Override
     public PermissionDTO getPermissionDTO(Permission permission) {
