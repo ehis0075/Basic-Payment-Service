@@ -52,10 +52,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         permissionService.createPermissionsIfNecessary();
 
         //get all super-admin permissions
-        List<Permission> adminPermissions = getAllSuperAdminPermissions();
+        List<Permission> adminPermissions = getAllPermissions();
 
         //create role super admin and assign all permissions and columns
-        Role adminRole = createSuperAdminRoleIfNotFound(adminPermissions);
+        Role adminRole = createRoleIfNotFound(adminPermissions);
 
         List<Merchant> merchantList = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         for (int i = 0; i < adminEmails.length; i++) {
 
             // create super Admin
-            Merchant superAdmin = createSuperAdmin(adminRole, adminEmails[i]);
+            Merchant superAdmin = createMerchant(adminRole, adminEmails[i]);
             if (Objects.nonNull(superAdmin)) {
                 merchantList.add(superAdmin);
             }
@@ -77,7 +77,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         alreadySetup = true;
     }
 
-    private Merchant createSuperAdmin(Role adminRole, String email) {
+    private Merchant createMerchant(Role adminRole, String email) {
 
         if (!adminMerchantRepository.existsByEmail(email)) {
             Merchant merchant = new Merchant();
@@ -114,12 +114,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     @Transactional
-    public List<Permission> getAllSuperAdminPermissions() {
+    public List<Permission> getAllPermissions() {
         return permissionService.getPermissionsByPermissionType(PermissionType.SUPER);
     }
 
     @Transactional
-    public Role createSuperAdminRoleIfNotFound(List<Permission> permissions) {
+    public Role createRoleIfNotFound(List<Permission> permissions) {
 
         Role adminRole = adminRoleService.getRoleByName(SuperAdminUserConstant.adminUserRole);
         if (adminRole == null) {
