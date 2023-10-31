@@ -71,7 +71,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         // save super admin
         if (!merchantList.isEmpty()) {
-            log.info(":: Saving the first set of Super admin...");
             adminMerchantRepository.saveAll(merchantList);
         }
 
