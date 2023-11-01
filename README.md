@@ -12,21 +12,21 @@ creation of payments and viewing of payment details.
         Each transaction is assigned a unique transaction ID.
         Payment status is initially set to "Pending."
 
+    Payment Processing:
+        A service method is implemented to simulate payment processing.
+        The payment status is updated from "Pending" to "Completed" after a short delay (5 seconds).
+
     Payment Retrieval:
         Users can retrieve payment details by providing the payment ID.
         The system returns payment information, including the payment ID, amount, timestamp, and status.
 
-    Payment Processing:
-        A service method is implemented to simulate payment processing.
-        The payment status is updated from "Pending" to "Completed" after a short delay (e.g., 5 seconds).
-
     Error Handling:
         Validation is in place to ensure that payment amounts are positive numbers.
         Graceful error handling provides clear error messages to users.
-    Database Integration:
 
-    An H2 in-memory database is utilized to store payment records.
-    A Payment entity is created with fields for payment ID, amount, timestamp, and status.
+    Database Integration:
+        An H2 in-memory database is utilized to store payment records.
+        A Payment entity is created with fields for payment ID, amount, timestamp, and status.
 
 ### API Documentation:
 
@@ -34,13 +34,7 @@ creation of payments and viewing of payment details.
 
 ### Technical Requirements
 
-    Spring Boot is used for the project setup.
-    RESTful APIs are implemented for payment creation and retrieval.
-    Spring Data JPA is employed for database interaction.
-    Unit tests and integration tests are included for services and controllers.
-    Proper exception handling and logging are implemented.
-    Clear and meaningful error responses in JSON format are provided for API errors.
-    Maven is used for dependency management.
+
 
 ### Note that :
 
