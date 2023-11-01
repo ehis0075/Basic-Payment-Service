@@ -64,7 +64,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
 
     @Override
     public void pushTransaction() {
-        List<PaymentTransaction> paymentTransactionList = paymentTransactionRepository.findTop10ByPaymentStatusOrderByTransactionDateAsc("pending");
+        List<PaymentTransaction> paymentTransactionList = paymentTransactionRepository.findTop10ByPaymentStatusOrderByTransactionDateAsc("Pending");
 
         int size = paymentTransactionList.size();
         if (size > 0) {
