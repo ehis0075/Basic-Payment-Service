@@ -29,11 +29,11 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "Merchant-Portal-Main Backend REST APIs",
-                "Xpresspayment Merchant-Portal Main Backend REST APIs.",
+                "Basic Payment Service Backend REST APIs",
+                "Basic Payment Service Backend REST APIs.",
                 "1.0",
                 "Terms of service",
-                new Contact("XBS Dev Team", "www.xpresspayments.com", "ptad@xpresspayments.com"),
+                new Contact(" Dev Team", "", ""),
                 "License of API",
                 "API license URL",
                 Collections.emptyList());
