@@ -44,5 +44,4 @@ public class PaymentTransactionController {
         return generalService.prepareResponse(ResponseCodeAndMessage.SUCCESSFUL_0, data);
     }
 
-
 }

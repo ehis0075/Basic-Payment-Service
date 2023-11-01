@@ -31,19 +31,15 @@ import java.util.Locale;
 @AllArgsConstructor
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-//    boolean alreadySetup = false;
     private final PermissionService permissionService;
     private final MerchantRepository adminMerchantRepository;
-    private final PasswordEncoder passwordEncoder;
     private final UserSecurityDetailsService userSecurityDetailsService;
     private final MerchantUserRepository merchantUserRepository;
     private final MerchantRoleRepository merchantRoleRepository;
 
-
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-
 
         //create all permissions
         permissionService.createPermissionsIfNecessary();
@@ -100,7 +96,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
         log.info("MID {}", merchantId);
 
-        //check if merchantId is available
         return merchantId;
     }
 
