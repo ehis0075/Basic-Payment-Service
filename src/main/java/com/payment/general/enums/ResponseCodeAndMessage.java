@@ -3,6 +3,8 @@ package com.payment.general.enums;
 public enum ResponseCodeAndMessage {
 
     SUCCESSFUL_0("0", "Successful"),
+    UNAUTHORIZED_ACCESS("72", "Access denied"),
+
     TIMEOUT_ERROR_87("87", "Timeout error"),
     RECORD_NOT_FOUND_88("88", "Record not found"),
     DOCUMENT_NOT_FOUND_89("89", "Document not found"),

@@ -22,18 +22,6 @@ public class GeneralUtil {
         return !EmailValidator.getInstance().isValid(email);
     }
 
-    public static void validateUsernameAndEmail(String username, String email) {
-        // check that first name is not null or empty
-        if (GeneralUtil.stringIsNullOrEmpty(username)) {
-            throw new GeneralException(ResponseCodeAndMessage.INCOMPLETE_PARAMETERS_91.responseCode, "username cannot be null or empty!");
-        }
-
-        // check that last name is not null or empty
-        if (GeneralUtil.stringIsNullOrEmpty(email)) {
-            throw new GeneralException(ResponseCodeAndMessage.INCOMPLETE_PARAMETERS_91.responseCode, "email cannot be null or empty!");
-        }
-
-    }
 
     public static String generateUniqueReferenceNumber(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyMMddHHmmss");

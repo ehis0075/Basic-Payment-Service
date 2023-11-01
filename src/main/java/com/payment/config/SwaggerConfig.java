@@ -9,13 +9,11 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
-
 
     @Bean
     public Docket api() {
@@ -26,17 +24,16 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
-                //.paths(PathSelectors.ant("/v2/**"))  //for versioning of apis: to retrict what appears in the doc
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfo(
-                "Payment Service REST APIs",
-                "Payment Service REST APIs.",
+                "Merchant-Portal-Main Backend REST APIs",
+                "Xpresspayment Merchant-Portal Main Backend REST APIs.",
                 "1.0",
                 "Terms of service",
-                new Contact("Payment Service Dev Team", "null", "nul"),
+                new Contact("XBS Dev Team", "www.xpresspayments.com", "ptad@xpresspayments.com"),
                 "License of API",
                 "API license URL",
                 Collections.emptyList());
@@ -55,10 +52,5 @@ public class SwaggerConfig {
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
         return Collections.singletonList(new SecurityReference("JWT", authorizationScopes));
-    }
-
-    @Bean
-    public Principal principal() {
-        return () -> principal().getName(); // Return a default principal
     }
 }

@@ -1,6 +1,5 @@
 package com.payment.permission.model;
 
-import com.payment.permission.dto.PermissionDTO;
 import com.payment.permission.enums.PermissionType;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -11,11 +10,11 @@ import javax.persistence.*;
 
 
 @Data
-@Entity
+@Entity(name = "permission")
 public class Permission {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(unique = true)
@@ -23,25 +22,18 @@ public class Permission {
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private boolean userA = false;
+    private boolean merchantAdmin = false;
 
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private boolean superAdmin = true;
 
     public void setPermissionType(PermissionType permissionType) {
-        this.userA = permissionType.equals(PermissionType.USER);
+        this.merchantAdmin = permissionType.equals(PermissionType.MERCHANT);
         this.superAdmin = true;
     }
 
     public PermissionType getPermissionType() {
-        return this.userA ? PermissionType.USER : PermissionType.SUPER;
-    }
-
-    public static PermissionDTO getPermissionDTO(Permission permission) {
-
-        PermissionDTO permissionDTO = new PermissionDTO();
-        permissionDTO.setName(permission.getName());
-        return permissionDTO;
+        return this.merchantAdmin ? PermissionType.MERCHANT : PermissionType.SUPER;
     }
 }

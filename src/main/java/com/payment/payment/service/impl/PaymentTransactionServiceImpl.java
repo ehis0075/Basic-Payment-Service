@@ -1,10 +1,10 @@
 package com.payment.payment.service.impl;
 
+import com.payment.exception.GeneralException;
+import com.payment.general.enums.ResponseCodeAndMessage;
 import com.payment.merchant.repository.MerchantRepository;
 import com.payment.payment.dto.PaymentTransactionDTO;
 import com.payment.payment.dto.PaymentTransactionPayload;
-import com.payment.exception.GeneralException;
-import com.payment.general.enums.ResponseCodeAndMessage;
 import com.payment.payment.model.PaymentTransaction;
 import com.payment.payment.repository.PaymentTransactionRepository;
 import com.payment.payment.service.PaymentTransactionService;
@@ -32,14 +32,14 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
     public PaymentTransactionDTO savePaymentTransaction(PaymentTransactionPayload payload) {
         log.info("Request to save transaction payment with payload {}", payload);
 
-        if(Objects.isNull(payload.getMerchantId())){
+        if (Objects.isNull(payload.getMerchantId())) {
             throw new GeneralException(ResponseCodeAndMessage.INCOMPLETE_PARAMETERS_91.responseCode, "Merchant ID cannot be null or empty!");
         }
 
         // validate that merchant exist
         boolean isExist = merchantRepository.existsByMerchantId(payload.getMerchantId());
 
-        if(!isExist){
+        if (!isExist) {
             throw new GeneralException(ResponseCodeAndMessage.RECORD_NOT_FOUND_88.responseCode, "Merchant Not Found");
         }
 
@@ -78,16 +78,16 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
     }
 
     @Override
-    public PaymentTransactionDTO findPaymentTransactionByReferenceNumber(String refNumber){
+    public PaymentTransactionDTO findPaymentTransactionByReferenceNumber(String refNumber) {
         log.info("Getting Payment transaction with payment Ref Number {}", refNumber);
 
-        if(Objects.isNull(refNumber)){
+        if (Objects.isNull(refNumber)) {
             throw new GeneralException(ResponseCodeAndMessage.INCOMPLETE_PARAMETERS_91.responseCode, "reference Number cannot be null or empty!");
         }
 
         PaymentTransaction paymentTransaction = paymentTransactionRepository.findByPaymentReferenceNumber(refNumber);
 
-        if(Objects.isNull(paymentTransaction)){
+        if (Objects.isNull(paymentTransaction)) {
             throw new GeneralException(ResponseCodeAndMessage.INCOMPLETE_PARAMETERS_91.responseCode, "Payment transaction not Found!");
         }
 
@@ -95,21 +95,22 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
     }
 
     @Override
-    public List<PaymentTransaction> findPaymentTransactionListForOneMerchant(String merchantId){
+    public List<PaymentTransaction> findPaymentTransactionListForOneMerchant(String merchantId) {
         log.info("Getting Payment transaction list with merchant Id {}", merchantId);
 
-        if(Objects.isNull(merchantId)){
+        if (Objects.isNull(merchantId)) {
             throw new GeneralException(ResponseCodeAndMessage.INCOMPLETE_PARAMETERS_91.responseCode, "Merchant ID cannot be null or empty!");
         }
 
-        List<PaymentTransaction>  paymentTransactionList = paymentTransactionRepository.findAllByMerchantId(merchantId);
+        List<PaymentTransaction> paymentTransactionList = paymentTransactionRepository.findAllByMerchantId(merchantId);
 
-        if(Objects.isNull(paymentTransactionList)){
+        if (Objects.isNull(paymentTransactionList)) {
             throw new GeneralException(ResponseCodeAndMessage.INCOMPLETE_PARAMETERS_91.responseCode, "No Payment transaction found for this merchant");
         }
 
         return paymentTransactionList;
     }
+
     private void pushTransaction(PaymentTransaction transaction) {
 
         transaction.setPaymentStatus("Completed");
@@ -128,7 +129,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
         paymentTransactionDTO.setPaymentReferenceNumber(paymentTransaction.getPaymentReferenceNumber());
         paymentTransactionDTO.setTransactionDate(paymentTransaction.getTransactionDate());
         paymentTransactionDTO.setMerchantId(paymentTransaction.getMerchantId());
-        
+
         return paymentTransactionDTO;
 
     }

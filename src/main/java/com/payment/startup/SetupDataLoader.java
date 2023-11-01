@@ -1,14 +1,20 @@
 package com.payment.startup;
 
 
-import com.payment.merchant.constants.SuperAdminUserConstant;
+import com.payment.auth.model.UserSecurityDetails;
+import com.payment.auth.service.UserSecurityDetailsService;
 import com.payment.merchant.model.Merchant;
 import com.payment.merchant.repository.MerchantRepository;
 import com.payment.permission.enums.PermissionType;
 import com.payment.permission.model.Permission;
 import com.payment.permission.service.PermissionService;
-import com.payment.role.model.Role;
-import com.payment.role.service.RoleService;
+import com.payment.role.model.MerchantRole;
+import com.payment.role.repository.MerchantRoleRepository;
+import com.payment.role.service.MerchantRoleService;
+import com.payment.user.dto.CreateMerchantUserDTO;
+import com.payment.user.model.MerchantUser;
+import com.payment.user.repository.MerchantUserRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -17,79 +23,63 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Value("${super.admin.emails}")
-    private String superAdminEmails;
-    boolean alreadySetup = false;
-    private final RoleService adminRoleService;
+//    boolean alreadySetup = false;
     private final PermissionService permissionService;
     private final MerchantRepository adminMerchantRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserSecurityDetailsService userSecurityDetailsService;
+    private final MerchantUserRepository merchantUserRepository;
+    private final MerchantRoleRepository merchantRoleRepository;
 
-    public SetupDataLoader(RoleService adminRoleService, PermissionService permissionService, MerchantRepository adminMerchantRepository, PasswordEncoder passwordEncoder) {
-        this.adminRoleService = adminRoleService;
-        this.permissionService = permissionService;
-        this.adminMerchantRepository = adminMerchantRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        if (alreadySetup)
-            return;
 
         //create all permissions
         permissionService.createPermissionsIfNecessary();
 
-        //get all super-admin permissions
-        List<Permission> adminPermissions = getAllPermissions();
+        //get all merchant permissions
+        List<Permission> merchantPermissions = getAllPermissions();
+
+        Merchant merchant = createMerchant();
 
         //create role super admin and assign all permissions and columns
-        Role adminRole = createRoleIfNotFound(adminPermissions);
+        MerchantRole merchantUserRole = createRoleIfNotFound(merchantPermissions, merchant);
 
-        List<Merchant> merchantList = new ArrayList<>();
+        CreateMerchantUserDTO createMerchantUserDTO = new CreateMerchantUserDTO();
+        createMerchantUserDTO.setEmail("ehis@gmail.com");
+        createMerchantUserDTO.setMerchantId(merchant.getMerchantId());
+        createMerchantUserDTO.setRoleId(merchantUserRole.getId());
+        createMerchantUserDTO.setPassword("ehis123$");
 
-        String[] adminEmails = superAdminEmails.split(",");
-        for (int i = 0; i < adminEmails.length; i++) {
+        UserSecurityDetails userSecurityDetails = userSecurityDetailsService.createUserSecurityDetails(createMerchantUserDTO);
 
-            // create super Admin
-            Merchant superAdmin = createMerchant(adminRole, adminEmails[i]);
-            if (Objects.nonNull(superAdmin)) {
-                merchantList.add(superAdmin);
-            }
-        }
+        MerchantUser merchantUser = new MerchantUser();
+        merchantUser.setMerchant(merchant);
+        merchantUser.setRole(merchantUserRole);
+        merchantUser.setUserSecurityDetails(userSecurityDetails);
 
-        // save super admin
-        if (!merchantList.isEmpty()) {
-            adminMerchantRepository.saveAll(merchantList);
-        }
+        merchantUserRepository.save(merchantUser);
 
-        alreadySetup = true;
     }
 
-    private Merchant createMerchant(Role adminRole, String email) {
+    private Merchant createMerchant() {
 
-        if (!adminMerchantRepository.existsByEmail(email)) {
-            Merchant merchant = new Merchant();
-            merchant.setUsername(SuperAdminUserConstant.adminUserName);
-            merchant.setEmail(email);
-            merchant.setPassword(passwordEncoder.encode(SuperAdminUserConstant.password));
-            merchant.setUserRole(adminRole);
-            merchant.setMerchantId(generateMerchantId(SuperAdminUserConstant.bizName));
-            return merchant;
-        }
+        Merchant merchant = new Merchant();
+        merchant.setName("Ehis Biz");
+        merchant.setMerchantId(generateMerchantId("Ehis Biz"));
 
-        return null;
+        return adminMerchantRepository.save(merchant);
     }
 
     static String generateRandomNumbers() {
@@ -108,6 +98,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         } else {
             merchantId = merchantName + generateRandomNumbers().substring(0, 10 - merchantName.length());
         }
+        log.info("MID {}", merchantId);
 
         //check if merchantId is available
         return merchantId;
@@ -115,18 +106,17 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Transactional
     public List<Permission> getAllPermissions() {
-        return permissionService.getPermissionsByPermissionType(PermissionType.SUPER);
+        return permissionService.getPermissionsByPermissionType(PermissionType.MERCHANT);
     }
 
     @Transactional
-    public Role createRoleIfNotFound(List<Permission> permissions) {
+    public MerchantRole createRoleIfNotFound(List<Permission> permissions, Merchant merchant) {
 
-        Role adminRole = adminRoleService.getRoleByName(SuperAdminUserConstant.adminUserRole);
-        if (adminRole == null) {
-            adminRole = new Role();
-            adminRole = adminRoleService.addRole(adminRole, SuperAdminUserConstant.adminUserRole, permissions);
-        }
-        return adminRole;
+        MerchantRole merchantRole = new MerchantRole();
+        merchantRole.setPermissions(permissions);
+        merchantRole.setName("Super Admin");
+        merchantRole.setMerchant(merchant);
 
+       return merchantRoleRepository.save(merchantRole);
     }
 }
