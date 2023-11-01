@@ -15,4 +15,7 @@ public class PaymentTransactionDTO {
     private Date transactionDate;
 
     private String merchantId;
+
+    private String paymentStatus;
+
 }

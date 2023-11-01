@@ -129,6 +129,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
         paymentTransactionDTO.setPaymentReferenceNumber(paymentTransaction.getPaymentReferenceNumber());
         paymentTransactionDTO.setTransactionDate(paymentTransaction.getTransactionDate());
         paymentTransactionDTO.setMerchantId(paymentTransaction.getMerchantId());
+        paymentTransactionDTO.setPaymentStatus(paymentTransaction.getPaymentStatus());
 
         return paymentTransactionDTO;
 
