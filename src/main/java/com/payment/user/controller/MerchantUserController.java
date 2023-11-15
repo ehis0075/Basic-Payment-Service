@@ -35,7 +35,7 @@ public class MerchantUserController {
     }
 
     @PostMapping()
-    public Response createUser() {
+    public Response getAllMerchantUser() {
 
         List<MerchantUser> data = userService.getAll();
         return generalService.prepareResponse(ResponseCodeAndMessage.SUCCESSFUL_0, data);
